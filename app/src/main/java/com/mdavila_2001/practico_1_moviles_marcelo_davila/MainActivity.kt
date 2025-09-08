@@ -25,9 +25,13 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -185,12 +189,18 @@ fun InterestCard(
                     FilledIconButton(
                         onClick = onDislike
                     ) {
-                        Text("No me interesa")
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "No me interesa"
+                        )
                     }
                     FilledIconButton(
                         onClick = onLike
                     ) {
-                        Text("Me interesa")
+                        Icon(
+                            imageVector = Icons.Filled.ThumbUp,
+                            contentDescription = "Me interesa"
+                        )
                     }
                 }
             }
@@ -336,6 +346,16 @@ fun MainScreen(modifier: Modifier) {
         },
         modifier = modifier.padding(8.dp)
     )
+}
+
+@Preview (showBackground = true)
+@Composable
+fun MainScreenPreview() {
+    Practico1MovilesMarceloDavilaTheme {
+        MainScreen(
+            modifier = Modifier.fillMaxSize()
+        )
+    }
 }
 
 fun getInterestsList(): List<Interest> {
