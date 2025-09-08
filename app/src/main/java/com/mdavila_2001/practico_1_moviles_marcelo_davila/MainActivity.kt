@@ -125,12 +125,6 @@ fun InterestCard(
                         error = painterResource(id = R.drawable.ic_launcher_foreground),
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop,
-                        onError = { error ->
-                            Log.e("AsyncImage", "Error loading image: ${error.result.throwable}")
-                        },
-                        onSuccess = {
-                            Log.d("AsyncImage", "Image loaded successfully")
-                        }
                     )
                 }
                 Row(
