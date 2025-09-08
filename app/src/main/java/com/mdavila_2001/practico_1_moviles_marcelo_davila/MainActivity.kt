@@ -313,7 +313,6 @@ fun InterestList(
 @Composable
 fun MainScreen(modifier: Modifier) {
     val interests = getInterestsList().toMutableList()
-
     InterestList(
         interests = interests,
         onUpdate = { updatedInterest ->
