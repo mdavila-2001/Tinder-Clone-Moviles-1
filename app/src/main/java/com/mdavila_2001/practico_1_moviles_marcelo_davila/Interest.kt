@@ -4,7 +4,7 @@ class Interest(
     var id: Int,
     var name: String,
     var description: String,
-    var images: List<String>,
+    var images: ArrayList<String>,
     var liked: Boolean = false,
     var disliked: Boolean = false,
 )

@@ -1,6 +1,7 @@
 package com.mdavila_2001.practico_1_moviles_marcelo_davila
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -123,7 +124,13 @@ fun InterestCard(
                         placeholder = painterResource(id = R.drawable.ic_launcher_background),
                         error = painterResource(id = R.drawable.ic_launcher_foreground),
                         modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
+                        contentScale = ContentScale.Crop,
+                        onError = { error ->
+                            Log.e("AsyncImage", "Error loading image: ${error.result.throwable}")
+                        },
+                        onSuccess = {
+                            Log.d("AsyncImage", "Image loaded successfully")
+                        }
                     )
                 }
                 Row(
@@ -330,7 +337,7 @@ fun getInterestsList(): List<Interest> {
             1,
             "Traveling",
             "Exploring new places and cultures.",
-            listOf(
+            arrayListOf(
                 "https://cdn2.thecatapi.com/images/MTYxMjc1OQ.jpg",
                 "https://cdn2.thecatapi.com/images/EHG3sOpAM.jpg",
                 "https://cdn2.thecatapi.com/images/EHG3sOpAM.jpg"
@@ -340,7 +347,7 @@ fun getInterestsList(): List<Interest> {
             2,
             "Cooking",
             "Creating delicious meals and trying new recipes.",
-            listOf(
+            arrayListOf(
                 "https://images.dog.ceo/breeds/affenpinscher/n02110627_8519.jpg",
                 "https://images.dog.ceo/breeds/affenpinscher/n02110627_8519.jpg",
                 "https://images.dog.ceo/breeds/affenpinscher/n02110627_8519.jpg"
