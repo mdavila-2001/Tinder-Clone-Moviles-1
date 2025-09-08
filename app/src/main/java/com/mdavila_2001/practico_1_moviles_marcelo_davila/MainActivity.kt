@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.mdavila_2001.practico_1_moviles_marcelo_davila.ui.theme.Practico1MovilesMarceloDavilaTheme
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 class MainActivity : ComponentActivity() {
@@ -60,10 +61,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             Practico1MovilesMarceloDavilaTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+//                    Greeting(
+//                        name = "Android",
+//                        modifier = Modifier.padding(innerPadding)
+//                    )
+                    MainScreen(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -152,7 +154,9 @@ fun InterestCard(
                 )
             }
             Row(
-                Modifier.fillMaxWidth().padding(12.dp),
+                Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
                 horizontalArrangement = Arrangement.spacedBy(
                     16.dp,
                     Alignment.CenterHorizontally
@@ -174,7 +178,7 @@ fun InterestCard(
 }
 
 @Composable
-fun SwipeCard(
+fun SwipeFunction(
     onSwipeLeft: () -> Unit = {},
     onSwipeRight: () -> Unit = {},
     swipeThresholdPx: Float = 72.dp.value * LocalDensity.current.density,
@@ -196,13 +200,32 @@ fun SwipeCard(
 
     Box(
         modifier = Modifier
-            .offset{ IntOffset(offsetX.roundToInt(), 0) }
+            .offset { IntOffset(offsetX.roundToInt(), 0) }
             .pointerInput(Unit) {
                 detectHorizontalDragGestures(
                     onDragEnd = {
                         val x = offsetX
                         when {
+                            x > swipeThresholdPx -> scope.launch {
+                                // swipe right
+                                offsetX = 500f
+                                delay(300)
+                                offsetX = 0f
+                                onSwipeRight(); offsetX.coerceAtLeast(0f)
+                            }
 
+                            x < -swipeThresholdPx -> scope.launch {
+                                // swipe left
+                                offsetX = -500f
+                                delay(300)
+                                offsetX = 0f
+                                onSwipeLeft(); offsetX.coerceAtMost(0f)
+                            }
+
+                            else -> {
+                                // return to initial position
+                                offsetX = 0f
+                            }
                         }
                     },
                     onHorizontalDrag = { change, dragAmount ->
@@ -211,6 +234,84 @@ fun SwipeCard(
                     }
                 )
             }
+            .graphicsLayer(alpha = alpha, rotationZ = rotation)
+    ) {
+        content()
+    }
+}
+
+@Composable
+fun SwipeCard(
+    interest: Interest,
+    onLike: (Interest) -> Unit,
+    onDislike: (Interest) -> Unit,
+    modifier: Modifier = Modifier
+){
+    SwipeFunction(
+        onSwipeLeft = { onDislike(interest) },
+        onSwipeRight = { onLike(interest) },
+        sensitivity = 0.5f
+    ) {
+        InterestCard(
+            interest = interest,
+            modifier = modifier,
+            onLike = { onLike(interest) },
+            onDislike = { onDislike(interest) }
+        )
+    }
+}
+
+@Composable
+fun InterestList(
+    interests: List<Interest>,
+    onUpdate: (Interest) -> Unit
+) {
+    var index by remember { mutableStateOf(0) }
+
+    if (index <= interests.lastIndex) {
+        val current = interests[index]
+        SwipeCard(
+            interest = current,
+            onLike = {
+                if (!it.liked) {
+                    it.liked = true
+                    it.disliked = false
+                    onUpdate(it)
+                }
+                index++
+            },
+            onDislike = {
+                if (!it.disliked) {
+                    it.disliked = true
+                    it.liked = false
+                    onUpdate(it)
+                }
+                index++
+            }
+        )
+    } else {
+        Box(
+            Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("No hay más intereses", style = MaterialTheme.typography.bodyLarge)
+        }
+    }
+}
+
+@Composable
+fun MainScreen(modifier: Modifier) {
+    val interests = getInterestsList().toMutableList()
+
+    InterestList(
+        interests = interests,
+        onUpdate = { updatedInterest ->
+            val index = interests.indexOfFirst { it.id == updatedInterest.id }
+            if (index != -1) {
+                interests[index] = updatedInterest
+            }
+        }
     )
 }
 
@@ -221,9 +322,9 @@ fun getInterestsList(): List<Interest> {
             "Traveling",
             "Exploring new places and cultures.",
             listOf(
-                "https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
-                "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
-                "https://images.unsplash.com/photo-1468071174046-657d9d351a40?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+                "https://images.dog.ceo/breeds/affenpinscher/n02110627_8519.jpg",
+                "https://images.dog.ceo/breeds/affenpinscher/n02110627_8519.jpg",
+                "https://images.dog.ceo/breeds/affenpinscher/n02110627_8519.jpg"
             )
         ),
         Interest(
@@ -231,9 +332,9 @@ fun getInterestsList(): List<Interest> {
             "Cooking",
             "Creating delicious meals and trying new recipes.",
             listOf(
-                "https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
-                "https://images.unsplash.com/photo-1512058564366-c9e9c5a2aaab?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
-                "https://images.unsplash.com/photo-1543352634-1b5f3eafedb7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+                "https://images.dog.ceo/breeds/affenpinscher/n02110627_8519.jpg",
+                "https://images.dog.ceo/breeds/affenpinscher/n02110627_8519.jpg",
+                "https://images.dog.ceo/breeds/affenpinscher/n02110627_8519.jpg"
             )
         ),
     )
