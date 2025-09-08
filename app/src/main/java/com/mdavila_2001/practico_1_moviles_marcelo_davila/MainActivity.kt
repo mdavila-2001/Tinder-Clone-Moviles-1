@@ -64,10 +64,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             Practico1MovilesMarceloDavilaTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-//                    Greeting(
-//                        name = "Android",
-//                        modifier = Modifier.padding(innerPadding)
-//                    )
                     MainScreen(modifier = Modifier.padding(innerPadding))
                 }
             }
@@ -274,7 +270,8 @@ fun SwipeCard(
 @Composable
 fun InterestList(
     interests: List<Interest>,
-    onUpdate: (Interest) -> Unit
+    onUpdate: (Interest) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var index by remember { mutableStateOf(0) }
 
@@ -320,7 +317,8 @@ fun MainScreen(modifier: Modifier) {
             if (index != -1) {
                 interests[index] = updatedInterest
             }
-        }
+        },
+        modifier = modifier.padding(8.dp)
     )
 }
 
