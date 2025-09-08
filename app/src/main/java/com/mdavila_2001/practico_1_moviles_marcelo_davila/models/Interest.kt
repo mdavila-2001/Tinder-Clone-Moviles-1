@@ -1,4 +1,4 @@
-package com.mdavila_2001.practico_1_moviles_marcelo_davila
+package com.mdavila_2001.practico_1_moviles_marcelo_davila.models
 
 class Interest(
     var id: Int,
