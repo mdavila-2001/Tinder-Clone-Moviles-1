@@ -45,6 +45,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -52,6 +53,7 @@ import coil3.compose.AsyncImage
 import com.mdavila_2001.practico_1_moviles_marcelo_davila.ui.theme.Practico1MovilesMarceloDavilaTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.math.max
 import kotlin.math.roundToInt
 
 class MainActivity : ComponentActivity() {
@@ -95,7 +97,7 @@ fun InterestCard(
     onLike: () -> Unit = {},
     onDislike: () -> Unit = {}
 ) {
-    val pagerState = rememberPagerState(pageCount = { maxOf(interest.images.size, 1) })
+    val pagerState = rememberPagerState(pageCount = { interest.images.size })
     Card (
         modifier = modifier,
         shape = RoundedCornerShape(24.dp),
@@ -109,10 +111,17 @@ fun InterestCard(
                     .fillMaxWidth()
                     .height(280.dp)
             ){
-                HorizontalPager(state = pagerState) { page ->
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(280.dp)
+                ) { page ->
                     AsyncImage(
                         model = interest.images[page],
                         contentDescription = interest.name,
+                        placeholder = painterResource(id = R.drawable.ic_launcher_background),
+                        error = painterResource(id = R.drawable.ic_launcher_foreground),
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
                     )
@@ -322,9 +331,9 @@ fun getInterestsList(): List<Interest> {
             "Traveling",
             "Exploring new places and cultures.",
             listOf(
-                "https://images.dog.ceo/breeds/affenpinscher/n02110627_8519.jpg",
-                "https://images.dog.ceo/breeds/affenpinscher/n02110627_8519.jpg",
-                "https://images.dog.ceo/breeds/affenpinscher/n02110627_8519.jpg"
+                "https://cdn2.thecatapi.com/images/MTYxMjc1OQ.jpg",
+                "https://cdn2.thecatapi.com/images/EHG3sOpAM.jpg",
+                "https://cdn2.thecatapi.com/images/EHG3sOpAM.jpg"
             )
         ),
         Interest(
