@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -95,93 +96,107 @@ fun InterestCard(
     onDislike: () -> Unit = {}
 ) {
     val pagerState = rememberPagerState(pageCount = { interest.images.size })
-    Card (
+
+    Card(
         modifier = modifier,
         shape = RoundedCornerShape(24.dp),
         elevation = CardDefaults.cardElevation(8.dp)
     ) {
-        Column(
-            Modifier.fillMaxWidth()
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(280.dp)
-            ){
-                HorizontalPager(
-                    state = pagerState,
+            item {
+                // Carrusel de imágenes
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(280.dp)
-                ) { page ->
-                    AsyncImage(
-                        model = interest.images[page],
-                        contentDescription = interest.name,
-                        placeholder = painterResource(id = R.drawable.ic_launcher_background),
-                        error = painterResource(id = R.drawable.ic_launcher_foreground),
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop,
-                    )
-                }
-                Row(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(12.dp),
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    repeat(pagerState.pageCount){ i ->
-                        val selected = pagerState.currentPage == i
-                        Box(
-                            Modifier
-                                .size(if (selected) 10.dp else 8.dp)
-                                .clip(CircleShape)
-                                .background(
-                                    if (selected) MaterialTheme.colorScheme.primary
-                                    else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
-                                )
+                    HorizontalPager(
+                        state = pagerState,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(280.dp)
+                    ) { page ->
+                        AsyncImage(
+                            model = interest.images[page],
+                            contentDescription = interest.name,
+                            placeholder = painterResource(id = R.drawable.ic_launcher_background),
+                            error = painterResource(id = R.drawable.ic_launcher_foreground),
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop,
                         )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(12.dp),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        repeat(pagerState.pageCount) { i ->
+                            val selected = pagerState.currentPage == i
+                            Box(
+                                Modifier
+                                    .size(if (selected) 10.dp else 8.dp)
+                                    .clip(CircleShape)
+                                    .background(
+                                        if (selected) MaterialTheme.colorScheme.primary
+                                        else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+                                    )
+                            )
+                        }
                     }
                 }
             }
-            Column(Modifier.padding(16.dp)) {
-                Text(
-                    interest.name,
-                    style = MaterialTheme.typography.titleLarge
-                )
-                Spacer(
-                    Modifier.height(6.dp)
-                )
-                Text(
-                    interest.description,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp)
-                )
-            }
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
-                horizontalArrangement = Arrangement.spacedBy(
-                    16.dp,
-                    Alignment.CenterHorizontally
-                )
-            ) {
-                FilledIconButton(
-                    onClick = onDislike
-                ) {
-                    Text("No me interesa")
+
+            item {
+                // Información del interés
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        interest.name,
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                    Spacer(
+                        Modifier.height(6.dp)
+                    )
+                    Text(
+                        interest.description,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp)
+                    )
                 }
-                FilledIconButton(
-                    onClick = onLike
+            }
+
+            item {
+                // Botones de Like / Dislike
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(
+                        16.dp,
+                        Alignment.CenterHorizontally
+                    )
                 ) {
-                    Text("Me interesa")
+                    FilledIconButton(
+                        onClick = onDislike
+                    ) {
+                        Text("No me interesa")
+                    }
+                    FilledIconButton(
+                        onClick = onLike
+                    ) {
+                        Text("Me interesa")
+                    }
                 }
             }
         }
     }
 }
+
 
 @Composable
 fun SwipeFunction(
