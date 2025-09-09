@@ -1,5 +1,6 @@
 package com.mdavila_2001.practico_1_moviles_marcelo_davila.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -22,7 +23,6 @@ fun MyInterests(
 
     LazyColumn(
         modifier = modifier
-            .fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -35,6 +35,7 @@ fun MyInterests(
                 )
             }
         } else {
+
             items(likedInterests, key = { it.id }) { interest ->
                 InterestCard(
                     interest = interest,
