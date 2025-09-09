@@ -21,7 +21,7 @@ fun BottomNavigationBar(
             selected = selectedTab == 0,
             onClick = { onTabSelected(0) },
             icon = { Icon(Icons.Default.Home, contentDescription = "FYE") },
-            label = { /* Label for Home */ }
+            label = { Text("Página principal") }
         )
         NavigationBarItem(
             selected = selectedTab == 1,

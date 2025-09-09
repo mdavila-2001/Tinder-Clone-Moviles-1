@@ -58,7 +58,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.room.util.copy
 import coil3.compose.AsyncImage
+import com.mdavila_2001.practico_1_moviles_marcelo_davila.components.BottomNavigationBar
 import com.mdavila_2001.practico_1_moviles_marcelo_davila.components.MyInterests
 import com.mdavila_2001.practico_1_moviles_marcelo_davila.models.Interest
 import com.mdavila_2001.practico_1_moviles_marcelo_davila.ui.theme.Practico1MovilesMarceloDavilaTheme
@@ -73,8 +75,31 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Practico1MovilesMarceloDavilaTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MainScreen(modifier = Modifier.padding(innerPadding))
+                var selectedTab by remember { mutableStateOf(0) }
+                val interests = remember { getInterestsList().toMutableList() }
+                val onUpdate: (Interest) -> Unit = { updatedInterest ->
+                    val index = interests.indexOfFirst { it.id == updatedInterest.id }
+                    if (index != -1) {
+                        interests[index] = updatedInterest
+                    }
+                }
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    bottomBar = {
+                        BottomNavigationBar(
+                            selectedTab = 0,
+                            onTabSelected = { newTabIndex ->
+                                selectedTab = newTabIndex
+                            }
+                        )
+                    }
+                ) { innerPadding ->
+                    MainScreen(
+                        modifier = Modifier.padding(innerPadding),
+                        selectedTab = selectedTab,
+                        interests = interests,
+                        onUpdate = onUpdate
+                    )
                 }
             }
         }
@@ -354,15 +379,12 @@ fun InterestList(
 }
 
 @Composable
-fun MainScreen(modifier: Modifier) {
-    var selectedTab by remember { mutableStateOf(0) }
-    val interests = getInterestsList().toMutableList()
-    val onUpdate: (Interest) -> Unit = { updatedInterest ->
-        val index = interests.indexOfFirst { it.id == updatedInterest.id }
-        if (index != -1) {
-            interests[index] = updatedInterest
-        }
-    }
+fun MainScreen(
+    modifier: Modifier,
+    selectedTab: Int,
+    interests: List<Interest>,
+    onUpdate: (Interest) -> Unit
+) {
     Column(
         modifier = modifier
     ) {
@@ -386,6 +408,7 @@ fun MainScreen(modifier: Modifier) {
                 )
             }
         }
+
     }
 }
 
@@ -394,7 +417,10 @@ fun MainScreen(modifier: Modifier) {
 fun MainScreenPreview() {
     Practico1MovilesMarceloDavilaTheme {
         MainScreen(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            selectedTab = 0,
+            interests = getInterestsList(),
+            onUpdate = {}
         )
     }
 }
@@ -415,6 +441,16 @@ fun getInterestsList(): List<Interest> {
             2,
             "Cooking",
             "Creating delicious meals and trying new recipes.",
+            arrayListOf(
+                "https://images.dog.ceo/breeds/affenpinscher/n02110627_8519.jpg",
+                "https://images.dog.ceo/breeds/affenpinscher/n02110627_8519.jpg",
+                "https://images.dog.ceo/breeds/affenpinscher/n02110627_8519.jpg"
+            )
+        ),
+        Interest(
+            3,
+            "Cleaning",
+            "Having order and being neat",
             arrayListOf(
                 "https://images.dog.ceo/breeds/affenpinscher/n02110627_8519.jpg",
                 "https://images.dog.ceo/breeds/affenpinscher/n02110627_8519.jpg",
