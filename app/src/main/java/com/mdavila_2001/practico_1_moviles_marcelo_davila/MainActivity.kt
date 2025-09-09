@@ -26,12 +26,15 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -56,6 +59,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.mdavila_2001.practico_1_moviles_marcelo_davila.components.MyInterests
 import com.mdavila_2001.practico_1_moviles_marcelo_davila.models.Interest
 import com.mdavila_2001.practico_1_moviles_marcelo_davila.ui.theme.Practico1MovilesMarceloDavilaTheme
 import kotlinx.coroutines.delay
@@ -187,18 +191,34 @@ fun InterestCard(
                     )
                 ) {
                     FilledIconButton(
-                        onClick = onDislike
+                        onClick = onDislike,
+                        modifier = Modifier.background(
+                            MaterialTheme.colorScheme.surface,
+                            shape = CircleShape
+                        ),
+                        colors = IconButtonDefaults.filledIconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.errorContainer,
+                            contentColor = MaterialTheme.colorScheme.onErrorContainer
+                        )
                     ) {
                         Icon(
-                            imageVector = Icons.Filled.Delete,
+                            imageVector = Icons.Default.Close,
                             contentDescription = "No me interesa"
                         )
                     }
                     FilledIconButton(
-                        onClick = onLike
+                        onClick = onLike,
+                        modifier = Modifier.background(
+                            MaterialTheme.colorScheme.surface,
+                            shape = CircleShape
+                        ),
+                        colors = IconButtonDefaults.filledIconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
                     ) {
                         Icon(
-                            imageVector = Icons.Filled.ThumbUp,
+                            imageVector = Icons.Default.Favorite,
                             contentDescription = "Me interesa"
                         )
                     }
@@ -335,17 +355,38 @@ fun InterestList(
 
 @Composable
 fun MainScreen(modifier: Modifier) {
+    var selectedTab by remember { mutableStateOf(0) }
     val interests = getInterestsList().toMutableList()
-    InterestList(
-        interests = interests,
-        onUpdate = { updatedInterest ->
-            val index = interests.indexOfFirst { it.id == updatedInterest.id }
-            if (index != -1) {
-                interests[index] = updatedInterest
+    val onUpdate: (Interest) -> Unit = { updatedInterest ->
+        val index = interests.indexOfFirst { it.id == updatedInterest.id }
+        if (index != -1) {
+            interests[index] = updatedInterest
+        }
+    }
+    Column(
+        modifier = modifier
+    ) {
+        when(selectedTab){
+            0 -> {
+                InterestList(
+                    interests = interests,
+                    onUpdate = onUpdate,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(8.dp)
+                )
             }
-        },
-        modifier = modifier.padding(8.dp)
-    )
+            1 -> {
+                val likedInterests = interests.filter { it.liked }
+                MyInterests(
+                    interests = likedInterests,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(8.dp)
+                )
+            }
+        }
+    }
 }
 
 @Preview (showBackground = true)
