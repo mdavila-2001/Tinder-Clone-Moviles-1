@@ -28,7 +28,6 @@ fun InterestList(
             onLike = {
                 if (!it.liked) {
                     it.liked = true
-                    it.disliked = false
                     onUpdate(it)
                 }
                 index++
@@ -36,7 +35,6 @@ fun InterestList(
             onDislike = {
                 if (!it.disliked) {
                     it.disliked = true
-                    it.liked = false
                     onUpdate(it)
                 }
                 index++
