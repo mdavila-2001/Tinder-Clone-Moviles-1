@@ -18,31 +18,27 @@ fun MyInterests(
     interests: List<Interest>,
     modifier: Modifier
 ) {
-    // Implementation of the MyInterests screen
     val likedInterests = interests.filter { it.liked }
-
-    if (likedInterests.isEmpty()) {
-        LazyColumn (
-            modifier = Modifier.fillMaxSize().padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            item{
-                Text(text = "No has agregado nada aún")
-            }
-        }
-    }
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        items(likedInterests){
-            InterestCard(
-                interest = it,
-                onLike = {},
-                onDislike = {}
-            )
+        if (likedInterests.isEmpty()) {
+            item {
+                Text(text = "No has agregado nada aún")
+            }
+        } else {
+            items(likedInterests) {
+                InterestCard(
+                    interest = it,
+                    onLike = {},
+                    onDislike = {}
+                )
+            }
         }
     }
 }
