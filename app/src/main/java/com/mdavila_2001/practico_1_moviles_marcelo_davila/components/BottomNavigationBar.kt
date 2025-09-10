@@ -28,7 +28,9 @@ fun BottomNavigationBar(
                 brush = Brush.linearGradient(
                     colors = listOf(
                         Color(0xFF16FA2C),
-                        Color(0xFF28E4FA)
+                        Color(0xFF28E4FA),
+//                        Color(0xFFFA288E),
+//                        Color(0xFFF028FA)
                     ),
                     start = Offset(-500f, 0f),
                     end = Offset(500f, 1000f)

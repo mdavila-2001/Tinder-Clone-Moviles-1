@@ -16,7 +16,7 @@ fun SwipeCard(
     SwipeFunction(
         onSwipeLeft = { onDislike(interest) },
         onSwipeRight = { onLike(interest) },
-        sensitivity = 0.3f
+        sensitivity = 0.5f
     ) {
         InterestCard(
             interest = interest,

@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -68,15 +69,16 @@ class MainActivity : ComponentActivity() {
                                     brush = Brush.linearGradient(
                                         colors = listOf(
                                             Color(0xFF16FA2C),
-                                            Color(0xFF28E4FA)
+                                            Color(0xFF28E4FA),
+//                                            Color(0xFFFA288E),
+//                                            Color(0xFFF028FA)
                                         ),
                                         start = Offset(-100f, 0f),
                                         end = Offset(500f, 1000f)
                                     )
                                 ),
                             colors = androidx.compose.material3.TopAppBarDefaults.topAppBarColors(
-                                containerColor = Color.Transparent,
-                                titleContentColor = MaterialTheme.colorScheme.onPrimary
+                                containerColor = Color.Transparent
                             )
                         )
                     },
@@ -127,7 +129,8 @@ fun MainScreen(
     onUpdate: (Interest) -> Unit
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center
     ) {
         when(selectedTab){
             0 -> {
