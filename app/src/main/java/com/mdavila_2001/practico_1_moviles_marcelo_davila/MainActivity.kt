@@ -4,11 +4,16 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -16,6 +21,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mdavila_2001.practico_1_moviles_marcelo_davila.components.BottomNavigationBar
@@ -24,6 +32,7 @@ import com.mdavila_2001.practico_1_moviles_marcelo_davila.components.MyInterests
 import com.mdavila_2001.practico_1_moviles_marcelo_davila.models.Interest
 import com.mdavila_2001.practico_1_moviles_marcelo_davila.ui.theme.Practico1MovilesMarceloDavilaTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,13 +48,46 @@ class MainActivity : ComponentActivity() {
                     }
                 }
                 Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = {
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = androidx.compose.ui.Alignment.Center
+                                ) {
+                                    Text(
+                                        text = if (selectedTab == 0) "Descubrir" else "Mis Intereses",
+                                        style = MaterialTheme.typography.headlineLarge,
+                                        color = Color.Black
+                                    )
+                                }
+                            },
+                            modifier = Modifier
+                                .padding(bottom = 4.dp)
+                                .background(
+                                    brush = Brush.linearGradient(
+                                        colors = listOf(
+                                            Color(0xFF16FA2C),
+                                            Color(0xFF28E4FA)
+                                        ),
+                                        start = Offset(-100f, 0f),
+                                        end = Offset(500f, 1000f)
+                                    )
+                                ),
+                            colors = androidx.compose.material3.TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color.Transparent,
+                                titleContentColor = MaterialTheme.colorScheme.onPrimary
+                            )
+                        )
+                    },
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
                         BottomNavigationBar(
                             selectedTab = selectedTab,
                             onTabSelected = { newTabIndex ->
                                 selectedTab = newTabIndex
-                            }
+                            },
+                            modifier = Modifier
                         )
                     }
                 ) { innerPadding ->
@@ -93,7 +135,6 @@ fun MainScreen(
                     interests = interests,
                     onUpdate = onUpdate,
                     modifier = Modifier
-                        .fillMaxSize()
                         .padding(8.dp)
                 )
             }

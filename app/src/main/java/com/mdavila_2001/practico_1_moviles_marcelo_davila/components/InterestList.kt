@@ -38,7 +38,8 @@ fun InterestList(
                     onUpdate(it)
                 }
                 index++
-            }
+            },
+            modifier = modifier
         )
     } else {
         Box(

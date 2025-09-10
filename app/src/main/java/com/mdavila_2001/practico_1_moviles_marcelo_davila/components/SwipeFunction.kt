@@ -1,5 +1,6 @@
 package com.mdavila_2001.practico_1_moviles_marcelo_davila.components
 
+import android.widget.Toast
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Box
@@ -13,6 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -29,6 +31,7 @@ fun SwipeFunction(
     content: @Composable () -> Unit
 ) {
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
     var offsetX by remember { mutableStateOf(0f) }
 
     val alpha by animateFloatAsState(
@@ -50,23 +53,20 @@ fun SwipeFunction(
                         val x = offsetX
                         when {
                             x > swipeThresholdPx -> scope.launch {
-                                // swipe right
                                 offsetX = 500f
-                                delay(300)
+                                delay(50)
+                                onSwipeRight()
+                                Toast.makeText(context, "Te interesa", Toast.LENGTH_SHORT).show()
                                 offsetX = 0f
-                                onSwipeRight(); offsetX.coerceAtLeast(0f)
                             }
-
                             x < -swipeThresholdPx -> scope.launch {
-                                // swipe left
                                 offsetX = -500f
-                                delay(300)
+                                delay(50)
+                                onSwipeLeft()
+                                Toast.makeText(context, "Lo eliminaremos", Toast.LENGTH_SHORT).show()
                                 offsetX = 0f
-                                onSwipeLeft(); offsetX.coerceAtMost(0f)
                             }
-
                             else -> {
-                                // return to initial position
                                 offsetX = 0f
                             }
                         }
