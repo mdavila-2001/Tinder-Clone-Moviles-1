@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
                                     Text(
                                         text = if (selectedTab == 0) "Descubrir" else "Mis Intereses",
                                         style = MaterialTheme.typography.headlineLarge,
-                                        color = Color.Black
+//                                        color = Color.Black
                                     )
                                 }
                             },
