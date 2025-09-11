@@ -22,9 +22,10 @@ import kotlin.times
 fun InterestList(
     interests: List<Interest>,
     onUpdate: (Interest) -> Unit,
+    index: Int,
+    onIndexChange: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var index by remember { mutableStateOf(0) }
 
     if (index <= interests.lastIndex) {
         Box(
@@ -46,14 +47,14 @@ fun InterestList(
                                     it.liked = true
                                     onUpdate(it)
                                 }
-                                index++
+                                onIndexChange(index + 1)
                             },
                             onDislike = {
                                 if (!it.disliked) {
                                     it.disliked = true
                                     onUpdate(it)
                                 }
-                                index++
+                                onIndexChange(index + 1)
                             },
                             modifier = Modifier
                                 .graphicsLayer {
