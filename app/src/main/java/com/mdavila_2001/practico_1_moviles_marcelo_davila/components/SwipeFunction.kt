@@ -2,7 +2,7 @@ package com.mdavila_2001.practico_1_moviles_marcelo_davila.components
 
 import android.widget.Toast
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Composable
@@ -26,58 +26,130 @@ import kotlin.math.roundToInt
 fun SwipeFunction(
     onSwipeLeft: () -> Unit = {},
     onSwipeRight: () -> Unit = {},
+    onSwipeUp: () -> Unit = {},
+    onSwipeDown: () -> Unit = {},
     swipeThresholdPx: Float = 72.dp.value * LocalDensity.current.density,
     sensitivity: Float = 1f,
+    key: Any? = null,
     content: @Composable () -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    var offsetX by remember { mutableStateOf(0f) }
+    var offsetX by remember(key) { mutableStateOf(0f) }
+    var offsetY by remember(key) { mutableStateOf(0f) }
+    var isDragging by remember(key) { mutableStateOf(false) }
+    var isAnimating by remember(key) { mutableStateOf(false) }
+
+    val animatedOffsetX by animateFloatAsState(
+        targetValue = offsetX,
+        label = "offsetX"
+    )
+
+    val animatedOffsetY by animateFloatAsState(
+        targetValue = offsetY,
+        label = "offsetY"
+    )
 
     val alpha by animateFloatAsState(
-        targetValue = (1f - (kotlin.math.abs(offsetX) / swipeThresholdPx)).coerceIn(0f, 1f),
+        targetValue = if (isDragging) {
+            val totalOffset = kotlin.math.sqrt(offsetX * offsetX + offsetY * offsetY)
+            (1f - (totalOffset / swipeThresholdPx)).coerceIn(0f, 1f)
+        } else 1f,
         label = "alpha"
     )
 
     val rotation by animateFloatAsState(
-        targetValue = (offsetX / 20f),
+        targetValue = if (isDragging) (offsetX / 20f) else 0f,
         label = "rotation"
     )
 
     Box(
         modifier = Modifier
-            .offset { IntOffset(offsetX.roundToInt(), 0) }
-            .pointerInput(Unit) {
-                detectHorizontalDragGestures(
+            .offset { IntOffset(animatedOffsetX.roundToInt(), animatedOffsetY.roundToInt()) }
+            .pointerInput(key) {
+                detectDragGestures(
+                    onDragStart = {
+                        if (!isAnimating) {
+                            isDragging = true
+                        }
+                    },
                     onDragEnd = {
-                        val x = offsetX
-                        when {
-                            x > swipeThresholdPx -> scope.launch {
-                                offsetX = 500f
-                                delay(50)
-                                onSwipeRight()
-                                Toast.makeText(context, "Te interesa", Toast.LENGTH_SHORT).show()
-                                offsetX = 0f
-                            }
-                            x < -swipeThresholdPx -> scope.launch {
-                                offsetX = -500f
-                                delay(50)
-                                onSwipeLeft()
-                                Toast.makeText(context, "Lo eliminaremos", Toast.LENGTH_SHORT).show()
-                                offsetX = 0f
-                            }
-                            else -> {
-                                offsetX = 0f
+                        if (!isAnimating) {
+                            isDragging = false
+                            val x = offsetX
+                            val y = offsetY
+                            val absX = kotlin.math.abs(x)
+                            val absY = kotlin.math.abs(y)
+                            
+                            when {
+                                absX > absY && x > swipeThresholdPx -> {
+                                    isAnimating = true
+                                    scope.launch {
+                                        offsetX = size.width.toFloat()
+                                        delay(300)
+                                        onSwipeRight()
+                                        Toast.makeText(context, "Te interesa", Toast.LENGTH_SHORT).show()
+                                        offsetX = 0f
+                                        offsetY = 0f
+                                        isAnimating = false
+                                    }
+                                }
+                                absX > absY && x < -swipeThresholdPx -> {
+                                    isAnimating = true
+                                    scope.launch {
+                                        offsetX = -size.width.toFloat()
+                                        delay(300)
+                                        onSwipeLeft()
+                                        Toast.makeText(context, "Lo eliminaremos", Toast.LENGTH_SHORT).show()
+                                        offsetX = 0f
+                                        offsetY = 0f
+                                        isAnimating = false
+                                    }
+                                }
+                                absY > absX && y < -swipeThresholdPx -> {
+                                    isAnimating = true
+                                    scope.launch {
+                                        offsetY = -size.height.toFloat()
+                                        delay(300)
+                                        onSwipeUp()
+                                        Toast.makeText(context, "Siguiente", Toast.LENGTH_SHORT).show()
+                                        offsetX = 0f
+                                        offsetY = 0f
+                                        isAnimating = false
+                                    }
+                                }
+                                absY > absX && y > swipeThresholdPx -> {
+                                    isAnimating = true
+                                    scope.launch {
+                                        offsetY = size.height.toFloat()
+                                        delay(300)
+                                        onSwipeDown()
+                                        Toast.makeText(context, "Anterior", Toast.LENGTH_SHORT).show()
+                                        offsetX = 0f
+                                        offsetY = 0f
+                                        isAnimating = false
+                                    }
+                                }
+                                else -> {
+                                    offsetX = 0f
+                                    offsetY = 0f
+                                }
                             }
                         }
                     },
-                    onHorizontalDrag = { change, dragAmount ->
-                        change.consume()
-                        offsetX += (dragAmount * sensitivity)
+                    onDrag = { change, dragAmount ->
+                        if (isDragging && !isAnimating) {
+                            change.consume()
+                            offsetX += (dragAmount.x * sensitivity)
+                            offsetY += (dragAmount.y * sensitivity)
+                        }
                     }
                 )
             }
-            .graphicsLayer(alpha = alpha, rotationZ = rotation)
+            .graphicsLayer(
+                alpha = alpha,
+                rotationZ = rotation
+            )
     ) {
         content()
     }

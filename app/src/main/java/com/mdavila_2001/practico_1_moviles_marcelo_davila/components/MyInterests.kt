@@ -35,6 +35,7 @@ fun MyInterests(
                 InterestCard(
                     interest = interest,
                     modifier = modifier,
+                    interactable = false,
                     onLike = {},
                     onDislike = {}
                 )

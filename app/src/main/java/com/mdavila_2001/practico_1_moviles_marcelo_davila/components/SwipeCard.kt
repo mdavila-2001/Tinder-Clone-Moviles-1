@@ -11,12 +11,17 @@ fun SwipeCard(
     interest: Interest,
     onLike: (Interest) -> Unit,
     onDislike: (Interest) -> Unit,
+    onNext: (() -> Unit)? = null,
+    onPrevious: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ){
     SwipeFunction(
         onSwipeLeft = { onDislike(interest) },
         onSwipeRight = { onLike(interest) },
-        sensitivity = 0.5f
+        onSwipeUp = { onNext?.invoke() },
+        onSwipeDown = { onPrevious?.invoke() },
+        sensitivity = 0.3f,
+        key = interest.id
     ) {
         InterestCard(
             interest = interest,

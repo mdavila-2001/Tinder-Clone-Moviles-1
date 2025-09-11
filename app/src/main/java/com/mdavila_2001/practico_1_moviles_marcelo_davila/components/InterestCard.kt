@@ -41,6 +41,7 @@ import com.mdavila_2001.practico_1_moviles_marcelo_davila.models.Interest
 fun InterestCard(
     interest: Interest,
     modifier: Modifier = Modifier,
+    interactable: Boolean = true,
     onLike: () -> Unit = {},
     onDislike: () -> Unit = {}
 ) {
@@ -113,48 +114,48 @@ fun InterestCard(
                         .padding(bottom = 8.dp)
                 )
             }
-
-         
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
-                horizontalArrangement = Arrangement.spacedBy(
-                    16.dp,
-                    Alignment.CenterHorizontally
-                )
-            ) {
-                FilledIconButton(
-                    onClick = onDislike,
-                    modifier = Modifier.background(
-                        MaterialTheme.colorScheme.surface,
-                        shape = CircleShape
-                    ),
-                    colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer,
-                        contentColor = MaterialTheme.colorScheme.onErrorContainer
+            if (interactable) {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(
+                        16.dp,
+                        Alignment.CenterHorizontally
                     )
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = "No me interesa"
-                    )
-                }
-                FilledIconButton(
-                    onClick = onLike,
-                    modifier = Modifier.background(
-                        MaterialTheme.colorScheme.surface,
-                        shape = CircleShape
-                    ),
-                    colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Favorite,
-                        contentDescription = "Me interesa"
-                    )
+                    FilledIconButton(
+                        onClick = onDislike,
+                        modifier = Modifier.background(
+                            MaterialTheme.colorScheme.surface,
+                            shape = CircleShape
+                        ),
+                        colors = IconButtonDefaults.filledIconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.errorContainer,
+                            contentColor = MaterialTheme.colorScheme.onErrorContainer
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "No me interesa"
+                        )
+                    }
+                    FilledIconButton(
+                        onClick = onLike,
+                        modifier = Modifier.background(
+                            MaterialTheme.colorScheme.surface,
+                            shape = CircleShape
+                        ),
+                        colors = IconButtonDefaults.filledIconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Favorite,
+                            contentDescription = "Me interesa"
+                        )
+                    }
                 }
             }
         }

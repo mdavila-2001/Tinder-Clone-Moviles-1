@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.mdavila_2001.practico_1_moviles_marcelo_davila.models.Interest
 import kotlin.times
+import kotlin.unaryMinus
 
 @Composable
 fun InterestList(
@@ -26,7 +27,6 @@ fun InterestList(
     onIndexChange: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
     if (index <= interests.lastIndex) {
         Box(
             modifier.padding(4.dp, 32.dp),
@@ -39,7 +39,7 @@ fun InterestList(
                     val offsetX = zIndex * 1.dp
                     val scale = 1f
 
-                    if(i == index) {
+                    if (i == index) {
                         SwipeCard(
                             interests[i],
                             onLike = {
@@ -56,6 +56,16 @@ fun InterestList(
                                 }
                                 onIndexChange(index + 1)
                             },
+                            onNext = {
+                                if (index < interests.lastIndex) {
+                                    onIndexChange(index + 1)
+                                }
+                            },
+                            onPrevious = {
+                                if (index > 0) {
+                                    onIndexChange(index - 1)
+                                }
+                            },
                             modifier = Modifier
                                 .graphicsLayer {
                                     translationY = offsetY.value
@@ -66,9 +76,7 @@ fun InterestList(
                         )
                     } else {
                         InterestCard(
-                            interest = interests[i],
-                            onLike = {},
-                            onDislike = {},
+                            interests[i],
                             modifier = Modifier
                                 .graphicsLayer {
                                     translationY = offsetY.value
@@ -81,32 +89,15 @@ fun InterestList(
                 }
             }
         }
-//        val current = interests[index]
-//        SwipeCard(
-//            interest = current,
-//            onLike = {
-//                if (!it.liked) {
-//                    it.liked = true
-//                    onUpdate(it)
-//                }
-//                index++
-//            },
-//            onDislike = {
-//                if (!it.disliked) {
-//                    it.disliked = true
-//                    onUpdate(it)
-//                }
-//                index++
-//            },
-//            modifier = modifier
-//        )
     } else {
         Box(
-            Modifier
-                .fillMaxSize(),
+            modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Text("No hay más intereses", style = MaterialTheme.typography.bodyLarge)
+            Text(
+                text = "No hay más intereses",
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
     }
 }
