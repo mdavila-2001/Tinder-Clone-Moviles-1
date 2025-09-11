@@ -112,7 +112,6 @@ fun SwipeFunction(
                                         offsetY = -size.height.toFloat()
                                         delay(300)
                                         onSwipeUp()
-                                        Toast.makeText(context, "Siguiente", Toast.LENGTH_SHORT).show()
                                         offsetX = 0f
                                         offsetY = 0f
                                         isAnimating = false
@@ -124,7 +123,6 @@ fun SwipeFunction(
                                         offsetY = size.height.toFloat()
                                         delay(300)
                                         onSwipeDown()
-                                        Toast.makeText(context, "Anterior", Toast.LENGTH_SHORT).show()
                                         offsetX = 0f
                                         offsetY = 0f
                                         isAnimating = false
