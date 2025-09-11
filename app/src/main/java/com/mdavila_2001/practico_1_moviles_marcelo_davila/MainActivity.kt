@@ -60,7 +60,7 @@ class MainActivity : ComponentActivity() {
                                     Text(
                                         text = if (selectedTab == 0) "Descubrir" else "Mis Intereses",
                                         style = MaterialTheme.typography.headlineLarge,
-//                                        color = Color.Black
+                                        color = Color.Black
                                     )
                                 }
                             },
@@ -109,22 +109,6 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Practico1MovilesMarceloDavilaTheme {
-        Greeting("Android")
-    }
-}
-
-@Composable
 fun MainScreen(
     modifier: Modifier,
     selectedTab: Int,
@@ -166,14 +150,21 @@ fun MainScreen(
 @Composable
 fun MainScreenPreview() {
     Practico1MovilesMarceloDavilaTheme {
-        MainScreen(
-            modifier = Modifier.fillMaxSize(),
-            selectedTab = 0,
-            interests = getInterestsList(),
-            interestIndex = 0,
-            onIndexChange = {},
-            onUpdate = {}
-        )
+        Column {
+            MainScreen(
+                modifier = Modifier.fillMaxSize(),
+                selectedTab = 0,
+                interests = getInterestsList(),
+                interestIndex = 0,
+                onIndexChange = {},
+                onUpdate = {}
+            )
+            BottomNavigationBar(
+                selectedTab = 0,
+                onTabSelected = {},
+                modifier = Modifier
+            )
+        }
     }
 }
 

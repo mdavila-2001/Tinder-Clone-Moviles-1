@@ -29,8 +29,6 @@ fun BottomNavigationBar(
                     colors = listOf(
                         Color(0xFF16FA2C),
                         Color(0xFF28E4FA),
-//                        Color(0xFFFA288E),
-//                        Color(0xFFF028FA)
                     ),
                     start = Offset(-500f, 0f),
                     end = Offset(500f, 1000f)
@@ -44,16 +42,33 @@ fun BottomNavigationBar(
             icon = {
                 Icon(
                     Icons.Default.Home,
-                    contentDescription = "Descubrir"
+                    contentDescription = "Descubrir",
+                    tint = if (selectedTab == 0) Color.White else Color.Black
                 )
-                   },
-            label = { Text("Descurbir") }
+            },
+            label = {
+                Text(
+                    "Descurbir",
+                    color = Color.Black
+                )
+            }
         )
         NavigationBarItem(
             selected = selectedTab == 1,
             onClick = { onTabSelected(1) },
-            icon = { Icon(Icons.Default.Favorite, contentDescription = "Mis Intereses") },
-            label = { Text("Mis Intereses") }
+            icon = {
+                Icon(
+                    Icons.Default.Favorite,
+                    contentDescription = "Mis Intereses",
+                    tint = if (selectedTab == 1) Color.White else Color.Black
+                )
+            },
+            label = {
+                Text(
+                    "Mis Intereses",
+                    color = Color.Black
+                )
+            }
         )
     }
 }
